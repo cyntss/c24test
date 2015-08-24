@@ -1,8 +1,8 @@
 (function() {
 
 	function CreateGossipGroups (maxPeople, maxPeoplePerGGroup, maxNumberOfGGroups) {
-		this.neighborhood = Math.floor((Math.random() * maxPeople) + 1);
-		console.log('Neighborhood population: ' + this.neighborhood);
+		var neighborhood = Math.floor((Math.random() * maxPeople) + 1);
+		console.log('Neighborhood population: ' + neighborhood);
 		
 		function createGroups (neighborhood) {
 			var minNumberOfGroups = neighborhood/maxPeoplePerGGroup;
@@ -26,7 +26,7 @@
 			//are there people left in no groups? if yes, lets put them in groups
 			var e = 1;
 			while (peopleInNeighborhood > 0) {
-				console.log('People not listed in a gossip groups. Adding more. ' +e+ ' round: ' + peopleInNeighborhood);
+				console.log('People not listed in a gossip groups. Adding more. ' +e+ '° round: ' + peopleInNeighborhood);
 				this.gossipGroupsArray.forEach(function(element, index){
 					
 					if (element < maxPeoplePerGGroup && peopleInNeighborhood > 0) {
@@ -43,13 +43,31 @@
 
 		};
 
-		var groupsCount = new createGroups(this.neighborhood);
+		var groupsCount = new createGroups(neighborhood);
 		this.groupsArray = groupsCount.gossipGroupsArray;
 		this.quantityOfGroups = groupsCount.gossipGroupsArray.length;
+
+		//lets create the tree of gossip groups connected. I will give a maximum of 5 connections per element in the array.
+		//which means, a person can belong to a maximum of 5 gossip groups
+		var maxConnections = 5;		
+		var arrayOfGossipGroups = this.groupsArray
+		var treeOfConnectionsGG = [];
+		
+		arrayOfGossipGroups.forEach(function(element, index){
+			var randomConnectionSize = Math.floor((Math.random() * maxConnections) + 1);
+      
+			while (randomConnectionSize > 0) {
+			  treeOfConnectionsGG.push(arrayOfGossipGroups[Math.floor(Math.random()*arrayOfGossipGroups.length)]);
+			  randomConnectionSize--;
+			}
+			console.log(treeOfConnectionsGG)
+
+		});
+
 	};
 
 	var gossipGroups = new CreateGossipGroups(10000, 20, 500);
 	console.log('Array of gossip groups: ' + gossipGroups.groupsArray);	
 	console.log('Number of gossip groups created: ' + gossipGroups.quantityOfGroups);
-	
+
 })();
